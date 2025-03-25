@@ -1,0 +1,23 @@
+{
+  "name": "hrnet-modal",
+  "version": "1.0.0",
+  "description": "A package for the project 14 of OpenClassrooms called HrNet",
+  "keywords": [
+    "hrnet",
+    "modal"
+  ],
+  "homepage": "https://github.com/HussonAxel/hrNet-modal-package",
+  "bugs": {
+    "url": "https://github.com/HussonAxel/hrNet-modal-package/issues"
+  },
+  "author": "Axel HUSSON",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HussonAxel/hrNet-modal-package.git"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "license": "MIT"
+}
