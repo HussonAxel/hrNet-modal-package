@@ -1,7 +1,7 @@
 import React from 'react';
-import type { ButtonHTMLAttributes, ReactNode } from 'react';
+import type { HTMLAttributes, ReactNode } from 'react';
 
-export interface ModalProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ModalProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
   variant?: 'primary' | 'secondary';
 }
@@ -12,15 +12,11 @@ export const Modal: React.FC<ModalProps> = ({
   className = '',
   ...props //
 }) => {
-  const modalClasses = `shared-modal shared-modal-${variant} ${className}`;
+  const modalClasses = `data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50`;
 
   return (
     <>
-      <button className={modalClasses} {...props}>
-        {children}
-      </button>
-      <div className={className}></div>
-      <div>{children}</div>
+      <div className={modalClasses} {...props}></div>
     </>
   );
 };
