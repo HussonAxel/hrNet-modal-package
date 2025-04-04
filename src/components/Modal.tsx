@@ -2,7 +2,7 @@ import React from 'react';
 import type { HTMLAttributes, ReactNode } from 'react';
 
 export interface ModalProps extends HTMLAttributes<HTMLDivElement> {
-  children: ReactNode;
+  children?: ReactNode;
   variant?: 'primary' | 'secondary';
 }
 
@@ -16,7 +16,9 @@ export const Modal: React.FC<ModalProps> = ({
 
   return (
     <>
-      <div className={modalClasses} {...props}></div>
+      <div className={modalClasses} {...props}>
+        {children}
+      </div>
     </>
   );
 };

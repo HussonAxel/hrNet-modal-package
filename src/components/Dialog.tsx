@@ -2,7 +2,7 @@ import React from 'react';
 import type { HTMLAttributes, ReactNode } from 'react';
 
 export interface DialogProps extends HTMLAttributes<HTMLDivElement> {
-  children: ReactNode;
+  children?: ReactNode;
   variant?: 'primary' | 'secondary';
 }
 
@@ -16,7 +16,9 @@ export const Dialog: React.FC<DialogProps> = ({
 
   return (
     <>
-      <div className={dialogClasses} {...props}></div>
+      <div className={dialogClasses} {...props}>
+        {children}
+      </div>
     </>
   );
 };
