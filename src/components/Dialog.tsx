@@ -1,5 +1,6 @@
 import React from 'react';
 import XSVG from './x.js';
+import { Button } from './Button.js';
 import type { HTMLAttributes, ReactNode } from 'react';
 
 export interface DialogProps extends HTMLAttributes<HTMLDivElement> {
@@ -19,7 +20,9 @@ export const Dialog: React.FC<DialogProps> = ({
     <>
       <div className={dialogClasses} {...props}>
         {children}
-        <XSVG />
+        <Button buttonUtility="Close">
+          <XSVG />
+        </Button>
       </div>
     </>
   );
