@@ -47,14 +47,14 @@ export const Modal: React.FC<ModalProps> = ({
 
   if (!isOpen) return null;
 
+  const contextValue = {
+    isOpen,
+    openModal: () => setInternalIsOpen(true),
+    closeModal: handleClose,
+  };
+
   return (
-    <ModalContext.Provider
-      value={{
-        isOpen,
-        openModal: () => setInternalIsOpen(true),
-        closeModal: handleClose,
-      }}
-    >
+    <ModalContext.Provider value={contextValue}>
       <div className={modalClasses} {...props}>
         {children}
       </div>
