@@ -7,7 +7,7 @@ interface ModalContentProps {
   title?: string;
   description?: string;
   children?: ReactNode;
-  closeButtonText?: string;
+  closeButtonText?: string | ReactNode;
 }
 
 export const ModalContent: React.FC<ModalContentProps> = ({
