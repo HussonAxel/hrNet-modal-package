@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { useModal } from './Modal.js';
 import { Button } from './Button.js';
 
-interface ModalContentProps {
+interface ModalContentProps extends React.HTMLAttributes<HTMLDivElement> {
   title?: string;
   description?: string;
   children?: ReactNode;
@@ -15,6 +15,8 @@ export const ModalContent: React.FC<ModalContentProps> = ({
   description,
   children,
   closeButtonText = 'Close',
+  className = '',
+  ...props
 }) => {
   const { closeModal } = useModal();
 
@@ -26,7 +28,7 @@ export const ModalContent: React.FC<ModalContentProps> = ({
     .replace(/\s+/g, ' ');
 
   return (
-    <div className={contentClasses}>
+    <div className={`${contentClasses} ${className}`} {...props}>
       {title && <h2 className="text-xl font-semibold">{title}</h2>}
       {description && <p className="text-gray-600">{description}</p>}
       {children}
