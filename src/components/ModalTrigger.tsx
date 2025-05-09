@@ -1,5 +1,5 @@
-import React from 'react';
-import type { ReactNode, MouseEvent } from 'react';
+import React, { type MouseEvent } from 'react';
+import type { ReactNode } from 'react';
 import { useModal } from './Modal.js';
 
 interface ModalTriggerProps {

@@ -18,8 +18,15 @@ export const ModalContent: React.FC<ModalContentProps> = ({
 }) => {
   const { closeModal } = useModal();
 
+  const contentClasses = `
+    relative grid w-[90%] max-w-lg gap-4 border bg-background p-6
+    shadow-lg duration-200 sm:rounded-lg
+  `
+    .trim()
+    .replace(/\s+/g, ' ');
+
   return (
-    <div className="fixed left-[50%] top-[50%] z-50 grid w-[90%] max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 sm:rounded-lg">
+    <div className={contentClasses}>
       {title && <h2 className="text-xl font-semibold">{title}</h2>}
       {description && <p className="text-gray-600">{description}</p>}
       {children}

@@ -1,3 +1,5 @@
+import React from 'react';
+
 interface XSVGProps extends React.SVGProps<SVGSVGElement> {}
 
 const XSVG: React.FC<XSVGProps> = (props) => (
