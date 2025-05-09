@@ -1,5 +1,11 @@
-import React, { createContext, useContext, useState } from 'react';
-import type { HTMLAttributes, ReactNode } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from 'react';
+import type { HTMLAttributes, ReactNode, KeyboardEvent } from 'react';
 
 interface ModalContextType {
   isOpen: boolean;
@@ -18,9 +24,20 @@ export const useModal = () => {
 };
 
 export interface ModalProps extends HTMLAttributes<HTMLDivElement> {
+  /** The content to be rendered inside the modal */
   children?: ReactNode;
+  /** Controls whether the modal is open (controlled mode) */
   isOpen?: boolean;
+  /** Callback fired when the modal is closed */
   onClose?: () => void;
+  /** Whether to close the modal when clicking outside */
+  closeOnOutsideClick?: boolean;
+  /** Whether to close the modal when pressing the escape key */
+  closeOnEscape?: boolean;
+  /** Custom animation duration in milliseconds */
+  animationDuration?: number;
+  /** Custom animation timing function */
+  animationTiming?: string;
 }
 
 export const Modal: React.FC<ModalProps> = ({
@@ -28,18 +45,78 @@ export const Modal: React.FC<ModalProps> = ({
   className = '',
   isOpen: controlledIsOpen,
   onClose,
+  closeOnOutsideClick = true,
+  closeOnEscape = true,
+  animationDuration = 200,
+  animationTiming = 'ease-in-out',
   ...props
 }) => {
   const [internalIsOpen, setInternalIsOpen] = useState(false);
   const isOpen = controlledIsOpen ?? internalIsOpen;
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     if (onClose) {
       onClose();
     } else {
       setInternalIsOpen(false);
     }
-  };
+  }, [onClose]);
+
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent) => {
+      if (closeOnEscape && event.key === 'Escape') {
+        handleClose();
+      }
+    },
+    [closeOnEscape, handleClose],
+  );
+
+  const handleBackdropClick = useCallback(
+    (event: React.MouseEvent) => {
+      if (closeOnOutsideClick && event.target === event.currentTarget) {
+        handleClose();
+      }
+    },
+    [closeOnOutsideClick, handleClose],
+  );
+
+  // Focus trap
+  useEffect(() => {
+    if (isOpen) {
+      const previousActiveElement = document.activeElement as HTMLElement;
+      const focusableElements = document.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      );
+      const firstFocusableElement = focusableElements[0] as HTMLElement;
+      const lastFocusableElement = focusableElements[
+        focusableElements.length - 1
+      ] as HTMLElement;
+
+      const handleTabKey = (e: KeyboardEvent) => {
+        if (e.key === 'Tab') {
+          if (e.shiftKey) {
+            if (document.activeElement === firstFocusableElement) {
+              lastFocusableElement.focus();
+              e.preventDefault();
+            }
+          } else {
+            if (document.activeElement === lastFocusableElement) {
+              firstFocusableElement.focus();
+              e.preventDefault();
+            }
+          }
+        }
+      };
+
+      document.addEventListener('keydown', handleTabKey as any);
+      firstFocusableElement?.focus();
+
+      return () => {
+        document.removeEventListener('keydown', handleTabKey as any);
+        previousActiveElement?.focus();
+      };
+    }
+  }, [isOpen]);
 
   const modalClasses = `
     data-[state=open]:animate-in data-[state=closed]:animate-out
@@ -61,7 +138,20 @@ export const Modal: React.FC<ModalProps> = ({
 
   return (
     <ModalContext.Provider value={contextValue}>
-      <div className={modalClasses} {...props}>
+      <div
+        role="dialog"
+        aria-modal="true"
+        className={modalClasses}
+        onKeyDown={handleKeyDown}
+        onClick={handleBackdropClick}
+        style={
+          {
+            '--modal-animation-duration': `${animationDuration}ms`,
+            '--modal-animation-timing': animationTiming,
+          } as React.CSSProperties
+        }
+        {...props}
+      >
         {children}
       </div>
     </ModalContext.Provider>
