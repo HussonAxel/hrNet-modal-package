@@ -1,11 +1,4 @@
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  useRef,
-} from 'react';
-import ReactDOM from 'react-dom';
+import React, { createContext, useContext, useState } from 'react';
 import type { HTMLAttributes, ReactNode } from 'react';
 
 interface ModalContextType {
@@ -40,24 +33,6 @@ export const Modal: React.FC<ModalProps> = ({
   const [internalIsOpen, setInternalIsOpen] = useState(false);
   const isOpen = controlledIsOpen ?? internalIsOpen;
 
-  const [portalNode, setPortalNode] = useState<HTMLElement | null>(null);
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const node = document.createElement('div');
-      node.setAttribute('id', 'modal-portal-root');
-      document.body.appendChild(node);
-      setPortalNode(node);
-
-      return () => {
-        if (node.parentNode) {
-          node.parentNode.removeChild(node);
-        }
-        setPortalNode(null);
-      };
-    }
-  }, []);
-
   const handleClose = () => {
     if (onClose) {
       onClose();
@@ -76,9 +51,7 @@ export const Modal: React.FC<ModalProps> = ({
     .trim()
     .replace(/\s+/g, ' ');
 
-  if (!isOpen || !portalNode) {
-    return null;
-  }
+  if (!isOpen) return null;
 
   const contextValue = {
     isOpen,
@@ -86,12 +59,11 @@ export const Modal: React.FC<ModalProps> = ({
     closeModal: handleClose,
   };
 
-  return ReactDOM.createPortal(
+  return (
     <ModalContext.Provider value={contextValue}>
       <div className={modalClasses} {...props}>
         {children}
       </div>
-    </ModalContext.Provider>,
-    portalNode,
+    </ModalContext.Provider>
   );
 };
